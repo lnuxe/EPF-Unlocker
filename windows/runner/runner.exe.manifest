@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
+  <!-- 
+    这段配置声明了 Windows 应用的 DPI 感知（dpiAwareness）权限/能力。
+    含义如下：
+      - PerMonitorV2：应用支持“每显示器”DPI 感知，可以在多显示器高分辨率环境下自适应缩放，获得最佳显示效果。
+    这不是通常意义上的“权限”，但它告诉 Windows 系统如何处理本应用的高 DPI 缩放，提升界面清晰度与体验。属于兼容性和显示方面的重要声明。
+  -->
+  <application xmlns="urn:schemas-microsoft-com:asm.v3">
+    <windowsSettings>
+      <dpiAwareness xmlns="http://schemas.microsoft.com/SMI/2016/WindowsSettings">PerMonitorV2</dpiAwareness>
+    </windowsSettings>
+  </application>
+  
+  <!-- 宽泛的文件系统访问能力（Windows 10 1803+） -->
+  <!-- 
+    注意：
+    1. broadFileSystemAccess 权限允许应用访问用户通过文件选择器选择的文件和目录
+    2. 此权限对于批量解锁功能是必需的，允许应用访问源目录和目标目录
+    3. 用户首次运行时，Windows 可能会提示用户授权此权限
+    4. 如果用户拒绝，应用仍可以使用文件选择器访问文件
+  -->
+  <capabilities>
+    <rescap:Capability Name="broadFileSystemAccess" xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities" />
+  </capabilities>
+ 
+  <!--
+    <compatibility> 元素用于指定应用支持的 Windows 版本。
+    <supportedOS> 的 Id 属性为 Windows 10/11 的 GUID。
+    这些 ID 在微软官方文档有说明，常见的 OS GUID 如下：
+      - Windows 10/11: {8e0f7a12-bfb3-4fe8-b9a5-48fd50a15a9a}
+    来源：
+    https://learn.microsoft.com/en-us/windows/win32/sbscs/application-manifests#supportedos
+    及
+    https://learn.microsoft.com/en-us/windows/win32/sbscs/supportedos-guid-values
+    一般直接从微软文档复制，无需自己生成。
+  -->
+  <compatibility xmlns="urn:schemas-microsoft-com:compatibility.v1">
+    <application>
+      <!-- Windows 10 and Windows 11 -->
+      <supportedOS Id="{8e0f7a12-bfb3-4fe8-b9a5-48fd50a15a9a}"/>
+    </application>
+  </compatibility>
+  <!-- 请求文件访问权限（Windows 10+） -->
+  <trustInfo xmlns="urn:schemas-microsoft-com:asm.v3">
+    <security>
+      <requestedPrivileges>
+        <requestedExecutionLevel level="asInvoker" uiAccess="false" />
+      </requestedPrivileges>
+    </security>
+  </trustInfo>
+</assembly>
