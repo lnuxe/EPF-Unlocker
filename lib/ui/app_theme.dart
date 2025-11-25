@@ -56,6 +56,6 @@ ThemeData buildAppTheme() {
       ),
     ),
     cardColor: brandCream,
-    dialogBackgroundColor: brandCream,
+    dialogTheme: const DialogTheme(backgroundColor: brandCream),
   );
 }

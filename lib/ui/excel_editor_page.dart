@@ -7,8 +7,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'app_theme.dart';
 import '../services/excel_file_service.dart';
-import '../services/excel_file_service.dart'
-    show XlsFormatNotSupportedException;
 import '../services/batch_processor.dart';
 
 /// 文件解锁工具：简洁易用的解锁界面
@@ -257,7 +255,7 @@ class _ExcelEditorPageState extends State<ExcelEditorPage> {
     if (baseOutputDir != null && baseOutputDir.isNotEmpty) {
       if (await _canWriteToDirectory(baseOutputDir)) {
         debugPrint('[ExcelEditorPage] 使用保存目录自动保存: $baseOutputDir');
-        return await _generateUniqueFilePath(
+        return _generateUniqueFilePath(
           baseDir: baseOutputDir,
           suggestedName: suggestedName,
           originalName: originalName,
@@ -757,6 +755,7 @@ class _ExcelEditorPageState extends State<ExcelEditorPage> {
     );
 
     if (selectedDate == null) return;
+    if (!mounted) return;
 
     // 选择时间
     final selectedTime = await showTimePicker(
@@ -784,6 +783,7 @@ class _ExcelEditorPageState extends State<ExcelEditorPage> {
     );
 
     if (selectedTime == null) return;
+    if (!mounted) return;
 
     // 组合日期和时间
     final scheduledDateTime = DateTime(
