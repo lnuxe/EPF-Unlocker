@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'app_theme.dart';
 import '../services/excel_file_service.dart';
 import '../services/batch_processor.dart';
+import '../services/excel_match_service.dart';
 
 /// 文件解锁工具：简洁易用的解锁界面
 class ExcelEditorPage extends StatefulWidget {
@@ -19,6 +20,19 @@ class ExcelEditorPage extends StatefulWidget {
 
 class _ExcelEditorPageState extends State<ExcelEditorPage> {
   final _fileService = ExcelFileService();
+  final _matchService = ExcelMatchService();
+
+  // 模式切换
+  bool _isMatchMode = false; // false = 解锁模式, true = 匹配模式
+
+  // 匹配模式相关状态
+  File? _draftFile; // 草稿文件
+  File? _targetFile; // 目标文件
+  bool _draftDragging = false;
+  bool _targetDragging = false;
+  bool _showInstructions = false; // 是否显示说明书（在 AppBar 中）
+  bool _isAutoMatching = false; // 是否正在自动匹配
+  bool _showOutputDirSettings = false; // 是否显示输出目录设置的详细内容
 
   bool _scheduleEnabled = false;
   DateTime? _scheduledDateTime; // 定时结束时间
@@ -1084,11 +1098,73 @@ class _ExcelEditorPageState extends State<ExcelEditorPage> {
     return Scaffold(
       backgroundColor: backgroundWhite,
       appBar: AppBar(
-        title: const Text('文件解锁工具'),
+        title: Text(_isMatchMode ? 'Excel 匹配工具' : '文件解锁工具'),
         backgroundColor: brandNavy,
         foregroundColor: Colors.white,
         elevation: 0,
         actions: [
+          // 使用说明按钮（仅在匹配模式显示）
+          if (_isMatchMode)
+            IconButton(
+              icon: Icon(
+                _showInstructions ? Icons.info : Icons.info_outline,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                setState(() {
+                  _showInstructions = !_showInstructions;
+                });
+                if (_showInstructions) {
+                  _showInfoDialog(
+                    '使用说明',
+                    '1. 将草稿 Excel 文件拖到左侧区域（支持多 Sheet）\n'
+                        '2. 将目标 Excel 文件拖到右侧区域（单 Sheet）\n'
+                        '3. 设置输出目录\n'
+                        '4. 拖拽文件后会自动执行匹配\n'
+                        '5. 程序会自动识别列结构，根据 Item 和 Description 匹配\n'
+                        '6. 匹配结果将保存到输出目录',
+                  );
+                }
+              },
+              tooltip: '使用说明',
+            ),
+          // 模式切换按钮
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Row(
+              children: [
+                TextButton.icon(
+                  onPressed: () {
+                    setState(() {
+                      _isMatchMode = !_isMatchMode;
+                      // 切换模式时清空匹配模式的文件
+                      if (_isMatchMode) {
+                        _draftFile = null;
+                        _targetFile = null;
+                      }
+                    });
+                  },
+                  icon: Icon(
+                    _isMatchMode ? Icons.lock_open : Icons.compare_arrows,
+                    color: Colors.white,
+                    size: 18,
+                  ),
+                  label: Text(
+                    _isMatchMode ? '解锁模式' : '匹配模式',
+                    style: const TextStyle(color: Colors.white, fontSize: 14),
+                  ),
+                  style: TextButton.styleFrom(
+                    backgroundColor: _isMatchMode
+                        ? brandPink.withOpacity(0.3)
+                        : brandPink.withOpacity(0.3),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  ),
+                ),
+                const SizedBox(width: 8),
+              ],
+            ),
+          ),
           IconButton(
             icon: Icon(
               _showScheduleSettings ? Icons.settings : Icons.settings_outlined,
@@ -1178,335 +1254,760 @@ class _ExcelEditorPageState extends State<ExcelEditorPage> {
               padding: const EdgeInsets.all(24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  // 大拖拽区域
-                  DropTarget(
-                    onDragEntered: (_) => setState(() => _dragging = true),
-                    onDragExited: (_) => setState(() => _dragging = false),
-                    onDragDone: (details) async {
-                      setState(() => _dragging = false);
-                      if (details.files.isEmpty) return;
-                      final path = details.files.first.path;
-
-                      if (await File(path).exists()) {
-                        final ext = path.toLowerCase().split('.').last;
-                        if (['xlsx', 'pdf'].contains(ext)) {
-                          await _unlockSingleFile(File(path));
-                        } else if (ext == 'xls') {
-                          await _showXlsFormatDialog();
-                        } else {
-                          setState(() {
-                            _statusMessage = '不支持的文件格式：.$ext（仅支持 .xlsx, .pdf）';
-                          });
-                        }
-                      } else if (await Directory(path).exists()) {
-                        await _setInputDirectory(path);
-                      }
-                    },
-                    child: Container(
-                      height: 280, // 从 200 增加到 280，使拖拽区域更大
-                      decoration: BoxDecoration(
-                        color: _dragging
-                            ? successGreen.withOpacity(0.15)
-                            : brandCream.withOpacity(0.3),
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: _dragging
-                              ? successGreen
-                              : brandNavy.withOpacity(0.3),
-                          width: _dragging ? 3 : 2,
-                        ),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            _dragging
-                                ? Icons.cloud_download
-                                : Icons.cloud_upload,
-                            size: 80, // 从 64 增加到 80，使图标更大
-                            color: _dragging ? successGreen : brandNavy,
-                          ),
-                          const SizedBox(height: 20), // 从 16 增加到 20
-                          Text(
-                            _dragging ? '释放文件以解锁' : '拖拽文件到这里解锁',
-                            style: theme.textTheme.titleLarge?.copyWith(
-                              color: brandNavy,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 22, // 增加字体大小
-                            ),
-                          ),
-                          const SizedBox(height: 12), // 从 8 增加到 12
-                          Text(
-                            '支持 .xlsx、.pdf 格式',
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              color: Colors.grey[600],
-                              fontSize: 16, // 增加字体大小
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 24),
-
-                  // 操作按钮
-                  Row(
-                    children: [
-                      Expanded(
-                        child: ElevatedButton.icon(
-                          onPressed: _isLoading ? null : _openAndUnlock,
-                          icon: const Icon(
-                            Icons.folder_open,
-                            size: 28, // 增加图标大小
-                          ),
-                          label: const Text(
-                            '选择文件解锁',
-                            style: TextStyle(
-                              fontSize: 18, // 增加字体大小
-                              fontWeight: FontWeight.w600, // 增加字体粗细
-                            ),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: brandNavy,
-                            foregroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 20, // 从 16 增加到 20
-                              horizontal: 24, // 增加水平内边距
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            elevation: 2, // 增加阴影效果
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  const SizedBox(height: 32),
-
-                  // 批量解锁设置（仅在 _showScheduleSettings 为 true 时显示）
-                  if (_showScheduleSettings) ...[
-                    Card(
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                const Icon(Icons.storage, color: brandNavy),
-                                const SizedBox(width: 8),
-                                Text(
-                                  '批量解锁',
-                                  style: theme.textTheme.titleMedium?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 12),
-                            Text(
-                              '1. 选择源目录与目标目录\n2. 点击按钮立即批量解锁或开启定时任务',
-                              style: theme.textTheme.bodySmall,
-                            ),
-                            const SizedBox(height: 16),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: OutlinedButton.icon(
-                                    onPressed: _isLoading
-                                        ? null
-                                        : _selectScheduledInputDir,
-                                    icon: const Icon(Icons.folder),
-                                    label: Text(
-                                      _scheduledInputDirPath != null
-                                          ? '源目录：${_scheduledInputDirPath!.split('/').last}'
-                                          : '选择源目录',
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    style: OutlinedButton.styleFrom(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 12),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                                Expanded(
-                                  child: OutlinedButton.icon(
-                                    onPressed: _isLoading
-                                        ? null
-                                        : _selectScheduledOutputDir,
-                                    icon: const Icon(Icons.folder_open),
-                                    label: Text(
-                                      _scheduledOutputDirPath != null
-                                          ? '目标目录：${_scheduledOutputDirPath!.split('/').last}'
-                                          : '选择目标目录',
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    style: OutlinedButton.styleFrom(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 12),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 16),
-                            ElevatedButton.icon(
-                              onPressed:
-                                  _isLoading ? null : _executeBatchUnlock,
-                              icon: const Icon(Icons.play_arrow_rounded),
-                              label: Text(
-                                '立即批量解锁'
-                                '${_batchExecutionCount > 0 ? '（已执行 $_batchExecutionCount 次）' : ''}',
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: successGreen,
-                                foregroundColor: Colors.white,
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 14),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-                            const Divider(),
-                            const SizedBox(height: 8),
-                            Row(
-                              children: [
-                                const Icon(Icons.schedule, color: brandPink),
-                                const SizedBox(width: 8),
-                                Text(
-                                  '定时自动解锁',
-                                  style: theme.textTheme.titleMedium?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const Spacer(),
-                                Switch(
-                                  value: _scheduleEnabled,
-                                  onChanged: _isLoading
-                                      ? null
-                                      : (v) => _handleScheduleToggle(v),
-                                  activeColor: brandPink,
-                                ),
-                              ],
-                            ),
-                            if (_scheduleEnabled) ...[
-                              const SizedBox(height: 12),
-                              // 时间选择按钮
-                              OutlinedButton.icon(
-                                onPressed: _isLoading
-                                    ? null
-                                    : _selectScheduledDateTime,
-                                icon: const Icon(Icons.access_time),
-                                label: Text(
-                                  _scheduledDateTime != null
-                                      ? '结束时间：${_scheduledDateTime!.year}-${_scheduledDateTime!.month.toString().padLeft(2, '0')}-${_scheduledDateTime!.day.toString().padLeft(2, '0')} ${_scheduledDateTime!.hour.toString().padLeft(2, '0')}:${_scheduledDateTime!.minute.toString().padLeft(2, '0')}'
-                                      : '选择结束时间',
-                                ),
-                                style: OutlinedButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 12, horizontal: 16),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  side: const BorderSide(color: brandPink),
-                                ),
-                              ),
-                              const SizedBox(height: 12),
-                              Container(
-                                width: double.infinity,
-                                padding: const EdgeInsets.all(12),
-                                decoration: BoxDecoration(
-                                  color: brandPink.withOpacity(0.08),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Text(
-                                  _scheduledDateTime != null
-                                      ? '定时任务将持续运行至 ${_scheduledDateTime!.year}-${_scheduledDateTime!.month.toString().padLeft(2, '0')}-${_scheduledDateTime!.day.toString().padLeft(2, '0')} ${_scheduledDateTime!.hour.toString().padLeft(2, '0')}:${_scheduledDateTime!.minute.toString().padLeft(2, '0')}，期间每 $_checkIntervalMinutes 分钟检查一次新文件并自动解锁。'
-                                      : '请选择定时结束时间（不能选择过去的时间）',
-                                  style: theme.textTheme.bodySmall?.copyWith(
-                                    color: brandPink,
-                                  ),
-                                ),
-                              ),
-                            ] else ...[
-                              // 定时任务未启用时，也显示时间选择按钮
-                              const SizedBox(height: 12),
-                              OutlinedButton.icon(
-                                onPressed: _isLoading
-                                    ? null
-                                    : _selectScheduledDateTime,
-                                icon: const Icon(Icons.access_time),
-                                label: Text(
-                                  _scheduledDateTime != null
-                                      ? '已选择：${_scheduledDateTime!.year}-${_scheduledDateTime!.month.toString().padLeft(2, '0')}-${_scheduledDateTime!.day.toString().padLeft(2, '0')} ${_scheduledDateTime!.hour.toString().padLeft(2, '0')}:${_scheduledDateTime!.minute.toString().padLeft(2, '0')}'
-                                      : '选择结束时间',
-                                ),
-                                style: OutlinedButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 12, horizontal: 16),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                ),
-                              ),
-                              if (_scheduledDateTime != null) ...[
-                                const SizedBox(height: 8),
-                                Text(
-                                  '提示：开启定时开关后，将在指定时间执行批量解锁',
-                                  style: theme.textTheme.bodySmall?.copyWith(
-                                    color: Colors.grey[600],
-                                  ),
-                                ),
-                              ],
-                            ],
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                  const SizedBox(height: 32),
-
-                  // 加载指示器
-                  if (_isLoading && _progressMessage != null)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 24),
-                      child: Column(
-                        children: [
-                          const CircularProgressIndicator(),
-                          const SizedBox(height: 16),
-                          Text(
-                            _progressMessage!,
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              color: brandNavy,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
-                    ),
-                ],
+                children: _isMatchMode
+                    ? _buildMatchModeContent(theme)
+                    : _buildUnlockModeContent(theme),
               ),
             ),
           ),
         ],
       ),
     );
+  }
+
+  /// 构建解锁模式的内容
+  List<Widget> _buildUnlockModeContent(ThemeData theme) {
+    return [
+      // 大拖拽区域
+      DropTarget(
+        onDragEntered: (_) => setState(() => _dragging = true),
+        onDragExited: (_) => setState(() => _dragging = false),
+        onDragDone: (details) async {
+          setState(() => _dragging = false);
+          if (details.files.isEmpty) return;
+          final path = details.files.first.path;
+
+          if (await File(path).exists()) {
+            final ext = path.toLowerCase().split('.').last;
+            if (['xlsx', 'pdf'].contains(ext)) {
+              await _unlockSingleFile(File(path));
+            } else if (ext == 'xls') {
+              await _showXlsFormatDialog();
+            } else {
+              setState(() {
+                _statusMessage = '不支持的文件格式：.$ext（仅支持 .xlsx, .pdf）';
+              });
+            }
+          } else if (await Directory(path).exists()) {
+            await _setInputDirectory(path);
+          }
+        },
+        child: Container(
+          height: 320, // 从 200 增加到 280，使拖拽区域更大
+          decoration: BoxDecoration(
+            color: _dragging
+                ? successGreen.withOpacity(0.15)
+                : brandCream.withOpacity(0.3),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: _dragging ? successGreen : brandNavy.withOpacity(0.3),
+              width: _dragging ? 3 : 2,
+            ),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                _dragging ? Icons.cloud_download : Icons.cloud_upload,
+                size: 80, // 从 64 增加到 80，使图标更大
+                color: _dragging ? successGreen : brandNavy,
+              ),
+              const SizedBox(height: 20), // 从 16 增加到 20
+              Text(
+                _dragging ? '释放文件以解锁' : '拖拽文件到这里解锁',
+                style: theme.textTheme.titleLarge?.copyWith(
+                  color: brandNavy,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 22, // 增加字体大小
+                ),
+              ),
+              const SizedBox(height: 12), // 从 8 增加到 12
+              Text(
+                '支持 .xlsx、.pdf 格式',
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: Colors.grey[600],
+                  fontSize: 16, // 增加字体大小
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+
+      const SizedBox(height: 24),
+
+      // 操作按钮
+      Row(
+        children: [
+          Expanded(
+            child: ElevatedButton.icon(
+              onPressed: _isLoading ? null : _openAndUnlock,
+              icon: const Icon(
+                Icons.folder_open,
+                size: 28, // 增加图标大小
+              ),
+              label: const Text(
+                '选择文件解锁',
+                style: TextStyle(
+                  fontSize: 18, // 增加字体大小
+                  fontWeight: FontWeight.w600, // 增加字体粗细
+                ),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: brandNavy,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(
+                  vertical: 20, // 从 16 增加到 20
+                  horizontal: 24, // 增加水平内边距
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                elevation: 2, // 增加阴影效果
+              ),
+            ),
+          ),
+        ],
+      ),
+
+      const SizedBox(height: 32),
+
+      // 批量解锁设置（仅在 _showScheduleSettings 为 true 时显示）
+      if (_showScheduleSettings) ...[
+        Card(
+          elevation: 2,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    const Icon(Icons.storage, color: brandNavy),
+                    const SizedBox(width: 8),
+                    Text(
+                      '批量解锁',
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  '1. 选择源目录与目标目录\n2. 点击按钮立即批量解锁或开启定时任务',
+                  style: theme.textTheme.bodySmall,
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: _isLoading ? null : _selectScheduledInputDir,
+                        icon: const Icon(Icons.folder),
+                        label: Text(
+                          _scheduledInputDirPath != null
+                              ? '源目录：${_scheduledInputDirPath!.split('/').last}'
+                              : '选择源目录',
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed:
+                            _isLoading ? null : _selectScheduledOutputDir,
+                        icon: const Icon(Icons.folder_open),
+                        label: Text(
+                          _scheduledOutputDirPath != null
+                              ? '目标目录：${_scheduledOutputDirPath!.split('/').last}'
+                              : '选择目标目录',
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton.icon(
+                  onPressed: _isLoading ? null : _executeBatchUnlock,
+                  icon: const Icon(Icons.play_arrow_rounded),
+                  label: Text(
+                    '立即批量解锁'
+                    '${_batchExecutionCount > 0 ? '（已执行 $_batchExecutionCount 次）' : ''}',
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: successGreen,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                const Divider(),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    const Icon(Icons.schedule, color: brandPink),
+                    const SizedBox(width: 8),
+                    Text(
+                      '定时自动解锁',
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const Spacer(),
+                    Switch(
+                      value: _scheduleEnabled,
+                      onChanged:
+                          _isLoading ? null : (v) => _handleScheduleToggle(v),
+                      activeColor: brandPink,
+                    ),
+                  ],
+                ),
+                if (_scheduleEnabled) ...[
+                  const SizedBox(height: 12),
+                  // 时间选择按钮
+                  OutlinedButton.icon(
+                    onPressed: _isLoading ? null : _selectScheduledDateTime,
+                    icon: const Icon(Icons.access_time),
+                    label: Text(
+                      _scheduledDateTime != null
+                          ? '结束时间：${_scheduledDateTime!.year}-${_scheduledDateTime!.month.toString().padLeft(2, '0')}-${_scheduledDateTime!.day.toString().padLeft(2, '0')} ${_scheduledDateTime!.hour.toString().padLeft(2, '0')}:${_scheduledDateTime!.minute.toString().padLeft(2, '0')}'
+                          : '选择结束时间',
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 12, horizontal: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      side: const BorderSide(color: brandPink),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: brandPink.withOpacity(0.08),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      _scheduledDateTime != null
+                          ? '定时任务将持续运行至 ${_scheduledDateTime!.year}-${_scheduledDateTime!.month.toString().padLeft(2, '0')}-${_scheduledDateTime!.day.toString().padLeft(2, '0')} ${_scheduledDateTime!.hour.toString().padLeft(2, '0')}:${_scheduledDateTime!.minute.toString().padLeft(2, '0')}，期间每 $_checkIntervalMinutes 分钟检查一次新文件并自动解锁。'
+                          : '请选择定时结束时间（不能选择过去的时间）',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: brandPink,
+                      ),
+                    ),
+                  ),
+                ] else ...[
+                  // 定时任务未启用时，也显示时间选择按钮
+                  const SizedBox(height: 12),
+                  OutlinedButton.icon(
+                    onPressed: _isLoading ? null : _selectScheduledDateTime,
+                    icon: const Icon(Icons.access_time),
+                    label: Text(
+                      _scheduledDateTime != null
+                          ? '已选择：${_scheduledDateTime!.year}-${_scheduledDateTime!.month.toString().padLeft(2, '0')}-${_scheduledDateTime!.day.toString().padLeft(2, '0')} ${_scheduledDateTime!.hour.toString().padLeft(2, '0')}:${_scheduledDateTime!.minute.toString().padLeft(2, '0')}'
+                          : '选择结束时间',
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 12, horizontal: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                  if (_scheduledDateTime != null) ...[
+                    const SizedBox(height: 8),
+                    Text(
+                      '提示：开启定时开关后，将在指定时间执行批量解锁',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  ],
+                ],
+              ],
+            ),
+          ),
+        ),
+      ],
+      const SizedBox(height: 32),
+
+      // 加载指示器
+      if (_isLoading && _progressMessage != null)
+        Padding(
+          padding: const EdgeInsets.only(top: 24),
+          child: Column(
+            children: [
+              const CircularProgressIndicator(),
+              const SizedBox(height: 16),
+              Text(
+                _progressMessage!,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: brandNavy,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+    ];
+  }
+
+  /// 构建匹配模式的内容
+  List<Widget> _buildMatchModeContent(ThemeData theme) {
+    // 自动折叠：如果输出目录已设置，默认折叠
+    final shouldAutoCollapse =
+        _outputDirExcel != null && _outputDirExcel!.isNotEmpty;
+
+    return [
+      // 两个拖拽区域 - 移到最上方
+      Row(
+        children: [
+          // 草稿文件拖拽区域
+          Expanded(
+            child: _buildDraftFileDropZone(theme),
+          ),
+          const SizedBox(width: 16),
+          // 目标文件拖拽区域
+          Expanded(
+            child: _buildTargetFileDropZone(theme),
+          ),
+        ],
+      ),
+
+      const SizedBox(height: 24),
+
+      // 输出目录设置
+      Card(
+        elevation: 2,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: InkWell(
+          onTap: shouldAutoCollapse
+              ? () {
+                  setState(() {
+                    _showOutputDirSettings = !_showOutputDirSettings;
+                  });
+                }
+              : null,
+          borderRadius: BorderRadius.circular(12),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    const Icon(Icons.folder_open, color: brandNavy),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        '输出目录',
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    if (shouldAutoCollapse)
+                      Icon(
+                        _showOutputDirSettings
+                            ? Icons.keyboard_arrow_down
+                            : Icons.keyboard_arrow_right,
+                        color: brandNavy,
+                      ),
+                  ],
+                ),
+                if (!shouldAutoCollapse || _showOutputDirSettings) ...[
+                  const SizedBox(height: 12),
+                  OutlinedButton.icon(
+                    onPressed: _isLoading ? null : _selectExcelOutputDir,
+                    icon: const Icon(Icons.folder_open),
+                    label: Text(
+                      _outputDirExcel != null
+                          ? _outputDirExcel!.split('/').last
+                          : '选择输出目录',
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      minimumSize: const Size(double.infinity, 48),
+                    ),
+                  ),
+                  if (_outputDirExcel == null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8),
+                      child: Text(
+                        '⚠️ 请选择输出目录',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: Colors.orange[700],
+                          fontSize: 11,
+                        ),
+                      ),
+                    ),
+                ] else ...[
+                  const SizedBox(height: 8),
+                  Text(
+                    _outputDirExcel != null
+                        ? _outputDirExcel!.split('/').last
+                        : '未设置',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ),
+      ),
+
+      const SizedBox(height: 24),
+
+      // 加载指示器
+      if (_isLoading && _progressMessage != null)
+        Padding(
+          padding: const EdgeInsets.only(top: 24),
+          child: Column(
+            children: [
+              const CircularProgressIndicator(),
+              const SizedBox(height: 16),
+              Text(
+                _progressMessage!,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: brandNavy,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+    ];
+  }
+
+  /// 构建草稿文件拖拽区域
+  Widget _buildDraftFileDropZone(ThemeData theme) {
+    return DropTarget(
+      onDragEntered: (_) => setState(() => _draftDragging = true),
+      onDragExited: (_) => setState(() => _draftDragging = false),
+      onDragDone: (details) async {
+        setState(() => _draftDragging = false);
+        if (details.files.isEmpty) return;
+        final path = details.files.first.path;
+        final file = File(path);
+        if (await file.exists()) {
+          final ext = path.toLowerCase().split('.').last;
+          if (ext == 'xlsx') {
+            setState(() {
+              _draftFile = file;
+              _statusMessage = '已选择草稿文件：${file.uri.pathSegments.last}';
+            });
+            // 检查输出目录，如果未设置则提示
+            if (_outputDirExcel == null || _outputDirExcel!.isEmpty) {
+              setState(() {
+                _statusMessage = '请先选择输出目录';
+              });
+              return;
+            }
+            // 自动执行匹配（如果两个文件都已选择）
+            _checkAndAutoMatch();
+          } else {
+            setState(() {
+              _statusMessage = '草稿文件必须是 .xlsx 格式';
+            });
+          }
+        }
+      },
+      child: Container(
+        height: 320,
+        decoration: BoxDecoration(
+          color: _draftDragging
+              ? successGreen.withOpacity(0.15)
+              : (_draftFile != null
+                  ? successGreen.withOpacity(0.1)
+                  : brandCream.withOpacity(0.3)),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: _draftDragging
+                ? successGreen
+                : (_draftFile != null
+                    ? successGreen
+                    : brandNavy.withOpacity(0.3)),
+            width: _draftDragging ? 3 : 2,
+          ),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              _draftFile != null ? Icons.check_circle : Icons.description,
+              size: 64,
+              color: _draftFile != null ? successGreen : brandNavy,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              _draftFile != null ? '草稿文件已选择' : '拖拽草稿文件到这里',
+              style: theme.textTheme.titleMedium?.copyWith(
+                color: brandNavy,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            if (_draftFile != null) ...[
+              const SizedBox(height: 8),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Text(
+                  _draftFile!.uri.pathSegments.last,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: Colors.grey[600],
+                  ),
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ] else ...[
+              const SizedBox(height: 8),
+              Text(
+                '支持 .xlsx 格式',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: Colors.grey[600],
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// 构建目标文件拖拽区域
+  Widget _buildTargetFileDropZone(ThemeData theme) {
+    return DropTarget(
+      onDragEntered: (_) => setState(() => _targetDragging = true),
+      onDragExited: (_) => setState(() => _targetDragging = false),
+      onDragDone: (details) async {
+        setState(() => _targetDragging = false);
+        if (details.files.isEmpty) return;
+        final path = details.files.first.path;
+        final file = File(path);
+        if (await file.exists()) {
+          final ext = path.toLowerCase().split('.').last;
+          if (ext == 'xlsx') {
+            setState(() {
+              _targetFile = file;
+              _statusMessage = '已选择目标文件：${file.uri.pathSegments.last}';
+            });
+            // 检查输出目录，如果未设置则提示
+            if (_outputDirExcel == null || _outputDirExcel!.isEmpty) {
+              setState(() {
+                _statusMessage = '请先选择输出目录';
+              });
+              return;
+            }
+            // 自动执行匹配（如果两个文件都已选择）
+            _checkAndAutoMatch();
+          } else {
+            setState(() {
+              _statusMessage = '目标文件必须是 .xlsx 格式';
+            });
+          }
+        }
+      },
+      child: Container(
+        height: 320,
+        decoration: BoxDecoration(
+          color: _targetDragging
+              ? successGreen.withOpacity(0.15)
+              : (_targetFile != null
+                  ? successGreen.withOpacity(0.1)
+                  : brandCream.withOpacity(0.3)),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: _targetDragging
+                ? successGreen
+                : (_targetFile != null
+                    ? successGreen
+                    : brandNavy.withOpacity(0.3)),
+            width: _targetDragging ? 3 : 2,
+          ),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              _targetFile != null ? Icons.check_circle : Icons.folder,
+              size: 64,
+              color: _targetFile != null ? successGreen : brandNavy,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              _targetFile != null ? '目标文件已选择' : '拖拽目标文件到这里',
+              style: theme.textTheme.titleMedium?.copyWith(
+                color: brandNavy,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            if (_targetFile != null) ...[
+              const SizedBox(height: 8),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Text(
+                  _targetFile!.uri.pathSegments.last,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: Colors.grey[600],
+                  ),
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ] else ...[
+              const SizedBox(height: 8),
+              Text(
+                '支持 .xlsx 格式',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: Colors.grey[600],
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// 检查并自动执行匹配
+  Future<void> _checkAndAutoMatch() async {
+    // 如果正在匹配，不重复执行
+    if (_isAutoMatching || _isLoading) return;
+
+    // 检查必要条件
+    if (_draftFile == null || _targetFile == null) return;
+    if (_outputDirExcel == null || _outputDirExcel!.isEmpty) {
+      setState(() {
+        _statusMessage = '请先选择输出目录';
+      });
+      return;
+    }
+
+    // 自动执行匹配，使用 try-finally 确保状态重置
+    _isAutoMatching = true;
+    try {
+      await _executeMatch();
+    } finally {
+      _isAutoMatching = false;
+    }
+  }
+
+  /// 选择 Excel 输出目录
+  Future<void> _selectExcelOutputDir() async {
+    final directory = await getDirectoryPath();
+    if (directory != null && directory.isNotEmpty) {
+      setState(() {
+        _outputDirExcel = directory;
+      });
+      await _persistBatchPreferences();
+      // 如果文件已选择，自动执行匹配
+      _checkAndAutoMatch();
+    }
+  }
+
+  /// 清理匹配状态（清空文件、重置加载状态）
+  void _clearMatchState({String? keepStatusMessage}) {
+    setState(() {
+      _draftFile = null;
+      _targetFile = null;
+      _isLoading = false;
+      _isAutoMatching = false;
+      _progressMessage = null;
+      // 保留状态消息（如果有），否则清空
+      if (keepStatusMessage != null) {
+        _statusMessage = keepStatusMessage;
+      } else if (_statusMessage != null && _statusMessage!.contains('匹配')) {
+        // 如果是匹配相关的消息，保留
+      } else {
+        _statusMessage = null;
+      }
+    });
+  }
+
+  /// 执行匹配
+  Future<void> _executeMatch() async {
+    if (_draftFile == null || _targetFile == null) {
+      await _showInfoDialog('缺少文件', '请先选择草稿文件和目标文件。');
+      return;
+    }
+
+    // 检查输出目录（提前检查）
+    if (_outputDirExcel == null || _outputDirExcel!.isEmpty) {
+      _updateLoadingState(
+        isLoading: false,
+        statusMessage: '请先选择输出目录',
+        progressMessage: null,
+      );
+      return;
+    }
+
+    _updateLoadingState(
+      isLoading: true,
+      statusMessage: null,
+      progressMessage: '正在匹配文件...',
+    );
+
+    String? finalStatusMessage;
+    try {
+      // 确定输出文件路径（必须使用已设置的输出目录）
+      final outputDir = _outputDirExcel!;
+      final targetFileName = _targetFile!.uri.pathSegments.last;
+      final baseName = targetFileName.replaceAll('.xlsx', '');
+      final timestamp = DateTime.now().millisecondsSinceEpoch;
+      final outputPath = '$outputDir/${baseName}_matched_$timestamp.xlsx';
+
+      // 执行匹配（自动识别列结构，不再需要 targetColumns 参数）
+      final result = await _matchService.matchExcelFiles(
+        draftFile: _draftFile!,
+        targetFile: _targetFile!,
+        outputPath: outputPath,
+      );
+
+      if (result.success) {
+        finalStatusMessage =
+            '${result.message}\n输出文件：${outputPath.split('/').last}';
+      } else {
+        finalStatusMessage = result.message;
+      }
+    } catch (e, st) {
+      debugPrint('[ExcelEditorPage] 匹配失败: $e');
+      debugPrint('[ExcelEditorPage] 堆栈: $st');
+      finalStatusMessage = '匹配失败：$e';
+    } finally {
+      // 无论成功还是失败，都清理匹配状态
+      _clearMatchState(keepStatusMessage: finalStatusMessage);
+    }
   }
 }

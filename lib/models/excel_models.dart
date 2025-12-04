@@ -126,3 +126,158 @@ class UnlockHistoryItem extends Equatable {
   List<Object?> get props =>
       [timestamp, originalPath, outputPath, isBatch, success, errorMessage];
 }
+
+/// 目标文件行结构（需要匹配的行）
+/// 根据 ss 文档：从黄色单元格所在行提取字段
+class TargetRow extends Equatable {
+  final String item;
+  final String description;
+  final String unit;
+  final double qty;
+  final int rowIndex; // 0-based（存储时）
+  final int rateColumn; // Rate 列的黄色单元格位置（0-based: 0=A, 1=B, ..., 4=E, 5=F）
+  final int amountColumn; // Amount 列的黄色单元格位置（0-based）
+
+  const TargetRow({
+    required this.item,
+    required this.description,
+    required this.unit,
+    required this.qty,
+    required this.rowIndex,
+    required this.rateColumn,
+    required this.amountColumn,
+  });
+
+  @override
+  List<Object?> get props =>
+      [item, description, unit, qty, rowIndex, rateColumn, amountColumn];
+}
+
+/// 草稿文件行结构（源数据）
+class DraftRow extends Equatable {
+  final String item;
+  final String description;
+  final String? unit;
+  final double? qty;
+  final double? rate; // Unit Rate
+  final double? amount; // Amount
+
+  const DraftRow({
+    required this.item,
+    required this.description,
+    this.unit,
+    this.qty,
+    this.rate,
+    this.amount,
+  });
+
+  DraftRow copyWith({
+    String? item,
+    String? description,
+    String? unit,
+    double? qty,
+    double? rate,
+    double? amount,
+  }) {
+    return DraftRow(
+      item: item ?? this.item,
+      description: description ?? this.description,
+      unit: unit ?? this.unit,
+      qty: qty ?? this.qty,
+      rate: rate ?? this.rate,
+      amount: amount ?? this.amount,
+    );
+  }
+
+  @override
+  List<Object?> get props => [item, description, unit, qty, rate, amount];
+}
+
+/// 匹配结果
+/// 根据 ss 文档：匹配成功后填写 rate 和 amount，并清除黄色背景
+class MatchResult extends Equatable {
+  final TargetRow target;
+  final DraftRow? draft;
+  final bool matched;
+  final double? rate; // Unit Rate 值
+  final double? amount; // Amount 值
+  final String? matchType; // 'strong', 'medium', 'weak', or null
+
+  const MatchResult({
+    required this.target,
+    this.draft,
+    required this.matched,
+    this.rate,
+    this.amount,
+    this.matchType,
+  });
+
+  @override
+  List<Object?> get props => [target, draft, matched, rate, amount, matchType];
+}
+
+/// 目标文件列结构（自动识别）
+class TargetColumns extends Equatable {
+  final int itemCol; // Item 列索引（0-based）
+  final int descriptionCol; // Description 列索引
+  final int unitCol; // Unit 列索引
+  final int qtyCol; // Qty 列索引
+  final int unitRateCol; // Unit Rate 列索引
+  final int amountCol; // Amount 列索引
+
+  const TargetColumns({
+    required this.itemCol,
+    required this.descriptionCol,
+    required this.unitCol,
+    required this.qtyCol,
+    required this.unitRateCol,
+    required this.amountCol,
+  });
+
+  @override
+  List<Object?> get props =>
+      [itemCol, descriptionCol, unitCol, qtyCol, unitRateCol, amountCol];
+}
+
+/// 草稿文件列结构（自动识别）
+class DraftColumns extends Equatable {
+  final int itemCol;
+  final int descriptionCol;
+  final int unitCol;
+  final int qtyCol;
+  final int rateCol; // Unit Rate 列索引
+  final int amountCol; // Amount 列索引
+
+  const DraftColumns({
+    required this.itemCol,
+    required this.descriptionCol,
+    required this.unitCol,
+    required this.qtyCol,
+    required this.rateCol,
+    required this.amountCol,
+  });
+
+  @override
+  List<Object?> get props =>
+      [itemCol, descriptionCol, unitCol, qtyCol, rateCol, amountCol];
+}
+
+/// 匹配服务结果
+class MatchServiceResult extends Equatable {
+  final bool success;
+  final String message;
+  final int matchedCount;
+  final int totalCount;
+  final List<String> logs;
+
+  const MatchServiceResult({
+    required this.success,
+    required this.message,
+    required this.matchedCount,
+    required this.totalCount,
+    required this.logs,
+  });
+
+  @override
+  List<Object?> get props => [success, message, matchedCount, totalCount, logs];
+}

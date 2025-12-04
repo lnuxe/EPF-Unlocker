@@ -49,8 +49,12 @@ dependencies:
   # Android 权限请求
   permission_handler: ^11.0.0
 
-  # PDF 解析和修改（纯 Dart，无需外部依赖）
+  # PDF 解析和修改（
   syncfusion_flutter_pdf: ^27.2.5  # 专业的 PDF 处理库，支持解密和修改
+  # Excel 处理（支持读取单元格颜色）
+  syncfusion_flutter_xlsio: ^27.2.5  # 专业的 Excel 处理库，支持读取单元格背景色
+  # 字符串相似度匹配算法
+  string_similarity: ^2.0.0  # 用于文本相似度匹配，支持 Jaro-Winkler 等算法
   shared_preferences: ^2.2.2
 
   # The following adds the Cupertino Icons font to your application.
