@@ -1,0 +1,399 @@
+Launching lib/main.dart on macOS in debug mode...
+Building macOS application...
+--- xcodebuild: WARNING: Using the first of multiple matching destinations:
+{ platform:macOS, arch:arm64, id:00008132-0002241A14F8801C, name:My Mac }
+{ platform:macOS, arch:x86_64, id:00008132-0002241A14F8801C, name:My Mac }
+✓ Built build/macos/Build/Products/Debug/myexcle.app
+Debug service listening on ws://127.0.0.1:52186/WnkjLQ9KAYo=/ws
+Syncing files to device macOS...
+
+======== Exception caught by services library ======================================================
+The following assertion was thrown during a platform message callback:
+A KeyDownEvent is dispatched, but the state shows that the physical key is already pressed. If this occurs in real application, please report this bug to Flutter. If this occurs in unit tests, please ensure that simulated events follow Flutter's event model as documented in `HardwareKeyboard`. This was the event: KeyDownEvent#24832(physicalKey: PhysicalKeyboardKey#f2ed2(usbHidUsage: "0x000700e3", debugName: "Meta Left"), logicalKey: LogicalKeyboardKey#e3a44(keyId: "0x200000106", keyLabel: "Meta Left", debugName: "Meta Left"), character: null, timeStamp: 2:40:25.241045)
+'package:flutter/src/services/hardware_keyboard.dart':
+Failed assertion: line 509 pos 16: '!_pressedKeys.containsKey(event.physicalKey)'
+
+
+Either the assertion indicates an error in the framework itself, or we should provide substantially more information in this error message to help you determine and fix the underlying cause.
+In either case, please report this assertion by filing a bug on GitHub:
+  https://github.com/flutter/flutter/issues/new?template=2_bug.yml
+
+When the exception was thrown, this was the stack: 
+#2      HardwareKeyboard._assertEventIsRegular.<anonymous closure> (package:flutter/src/services/hardware_keyboard.dart:509:16)
+#3      HardwareKeyboard._assertEventIsRegular (package:flutter/src/services/hardware_keyboard.dart:524:6)
+#4      HardwareKeyboard.handleKeyEvent (package:flutter/src/services/hardware_keyboard.dart:646:5)
+#5      KeyEventManager.handleRawKeyMessage (package:flutter/src/services/hardware_keyboard.dart:1167:37)
+#6      BasicMessageChannel.setMessageHandler.<anonymous closure> (package:flutter/src/services/platform_channel.dart:235:49)
+#7      _DefaultBinaryMessenger.setMessageHandler.<anonymous closure> (package:flutter/src/services/binding.dart:618:35)
+#8      _invoke2 (dart:ui/hooks.dart:344:13)
+#9      _ChannelCallbackRecord.invoke (dart:ui/channel_buffers.dart:45:5)
+#10     _Channel._drainStep (dart:ui/channel_buffers.dart:228:31)
+(elided 4 frames from class _AssertionError and dart:async)
+====================================================================================================
+flutter: [ExcelEditorPage] 已加载缓存的草稿文件: /Users/xiaolin/Desktop/草稿/Part IV - Pricing Document - Q25113（ZL) - 副本.xlsx
+
+======== Exception caught by services library ======================================================
+The following assertion was thrown during a platform message callback:
+A KeyDownEvent is dispatched, but the state shows that the physical key is already pressed. If this occurs in real application, please report this bug to Flutter. If this occurs in unit tests, please ensure that simulated events follow Flutter's event model as documented in `HardwareKeyboard`. This was the event: KeyDownEvent#24832(physicalKey: PhysicalKeyboardKey#f2ed2(usbHidUsage: "0x000700e3", debugName: "Meta Left"), logicalKey: LogicalKeyboardKey#e3a44(keyId: "0x200000106", keyLabel: "Meta Left", debugName: "Meta Left"), character: null, timeStamp: 2:40:25.241045)
+'package:flutter/src/services/hardware_keyboard.dart':
+Failed assertion: line 509 pos 16: '!_pressedKeys.containsKey(event.physicalKey)'
+
+
+Either the assertion indicates an error in the framework itself, or we should provide substantially more information in this error message to help you determine and fix the underlying cause.
+In either case, please report this assertion by filing a bug on GitHub:
+  https://github.com/flutter/flutter/issues/new?template=2_bug.yml
+
+When the exception was thrown, this was the stack: 
+#2      HardwareKeyboard._assertEventIsRegular.<anonymous closure> (package:flutter/src/services/hardware_keyboard.dart:509:16)
+#3      HardwareKeyboard._assertEventIsRegular (package:flutter/src/services/hardware_keyboard.dart:524:6)
+#4      HardwareKeyboard.handleKeyEvent (package:flutter/src/services/hardware_keyboard.dart:646:5)
+#5      KeyEventManager.handleRawKeyMessage (package:flutter/src/services/hardware_keyboard.dart:1167:37)
+#6      BasicMessageChannel.setMessageHandler.<anonymous closure> (package:flutter/src/services/platform_channel.dart:235:49)
+#7      _DefaultBinaryMessenger.setMessageHandler.<anonymous closure> (package:flutter/src/services/binding.dart:618:35)
+#8      _invoke2 (dart:ui/hooks.dart:344:13)
+#9      _ChannelCallbackRecord.invoke (dart:ui/channel_buffers.dart:45:5)
+#10     _Channel.push (dart:ui/channel_buffers.dart:135:31)
+#11     ChannelBuffers.push (dart:ui/channel_buffers.dart:343:17)
+#12     PlatformDispatcher._dispatchPlatformMessage (dart:ui/platform_dispatcher.dart:750:22)
+#13     _dispatchPlatformMessage (dart:ui/hooks.dart:257:31)
+(elided 2 frames from class _AssertionError)
+====================================================================================================
+
+======== Exception caught by services library ======================================================
+The following assertion was thrown during a platform message callback:
+A KeyDownEvent is dispatched, but the state shows that the physical key is already pressed. If this occurs in real application, please report this bug to Flutter. If this occurs in unit tests, please ensure that simulated events follow Flutter's event model as documented in `HardwareKeyboard`. This was the event: KeyDownEvent#24832(physicalKey: PhysicalKeyboardKey#f2ed2(usbHidUsage: "0x000700e3", debugName: "Meta Left"), logicalKey: LogicalKeyboardKey#e3a44(keyId: "0x200000106", keyLabel: "Meta Left", debugName: "Meta Left"), character: null, timeStamp: 2:40:25.241045)
+'package:flutter/src/services/hardware_keyboard.dart':
+Failed assertion: line 509 pos 16: '!_pressedKeys.containsKey(event.physicalKey)'
+
+
+Either the assertion indicates an error in the framework itself, or we should provide substantially more information in this error message to help you determine and fix the underlying cause.
+In either case, please report this assertion by filing a bug on GitHub:
+  https://github.com/flutter/flutter/issues/new?template=2_bug.yml
+
+When the exception was thrown, this was the stack: 
+#2      HardwareKeyboard._assertEventIsRegular.<anonymous closure> (package:flutter/src/services/hardware_keyboard.dart:509:16)
+#3      HardwareKeyboard._assertEventIsRegular (package:flutter/src/services/hardware_keyboard.dart:524:6)
+#4      HardwareKeyboard.handleKeyEvent (package:flutter/src/services/hardware_keyboard.dart:646:5)
+#5      KeyEventManager.handleRawKeyMessage (package:flutter/src/services/hardware_keyboard.dart:1167:37)
+#6      BasicMessageChannel.setMessageHandler.<anonymous closure> (package:flutter/src/services/platform_channel.dart:235:49)
+#7      _DefaultBinaryMessenger.setMessageHandler.<anonymous closure> (package:flutter/src/services/binding.dart:618:35)
+#8      _invoke2 (dart:ui/hooks.dart:344:13)
+#9      _ChannelCallbackRecord.invoke (dart:ui/channel_buffers.dart:45:5)
+#10     _Channel.push (dart:ui/channel_buffers.dart:135:31)
+#11     ChannelBuffers.push (dart:ui/channel_buffers.dart:343:17)
+#12     PlatformDispatcher._dispatchPlatformMessage (dart:ui/platform_dispatcher.dart:750:22)
+#13     _dispatchPlatformMessage (dart:ui/hooks.dart:257:31)
+(elided 2 frames from class _AssertionError)
+====================================================================================================
+
+======== Exception caught by services library ======================================================
+The following assertion was thrown during a platform message callback:
+A KeyDownEvent is dispatched, but the state shows that the physical key is already pressed. If this occurs in real application, please report this bug to Flutter. If this occurs in unit tests, please ensure that simulated events follow Flutter's event model as documented in `HardwareKeyboard`. This was the event: KeyDownEvent#24832(physicalKey: PhysicalKeyboardKey#f2ed2(usbHidUsage: "0x000700e3", debugName: "Meta Left"), logicalKey: LogicalKeyboardKey#e3a44(keyId: "0x200000106", keyLabel: "Meta Left", debugName: "Meta Left"), character: null, timeStamp: 2:40:25.241045)
+'package:flutter/src/services/hardware_keyboard.dart':
+Failed assertion: line 509 pos 16: '!_pressedKeys.containsKey(event.physicalKey)'
+
+
+Either the assertion indicates an error in the framework itself, or we should provide substantially more information in this error message to help you determine and fix the underlying cause.
+In either case, please report this assertion by filing a bug on GitHub:
+  https://github.com/flutter/flutter/issues/new?template=2_bug.yml
+
+When the exception was thrown, this was the stack: 
+#2      HardwareKeyboard._assertEventIsRegular.<anonymous closure> (package:flutter/src/services/hardware_keyboard.dart:509:16)
+#3      HardwareKeyboard._assertEventIsRegular (package:flutter/src/services/hardware_keyboard.dart:524:6)
+#4      HardwareKeyboard.handleKeyEvent (package:flutter/src/services/hardware_keyboard.dart:646:5)
+#5      KeyEventManager.handleRawKeyMessage (package:flutter/src/services/hardware_keyboard.dart:1167:37)
+#6      BasicMessageChannel.setMessageHandler.<anonymous closure> (package:flutter/src/services/platform_channel.dart:235:49)
+#7      _DefaultBinaryMessenger.setMessageHandler.<anonymous closure> (package:flutter/src/services/binding.dart:618:35)
+#8      _invoke2 (dart:ui/hooks.dart:344:13)
+#9      _ChannelCallbackRecord.invoke (dart:ui/channel_buffers.dart:45:5)
+#10     _Channel.push (dart:ui/channel_buffers.dart:135:31)
+#11     ChannelBuffers.push (dart:ui/channel_buffers.dart:343:17)
+#12     PlatformDispatcher._dispatchPlatformMessage (dart:ui/platform_dispatcher.dart:750:22)
+#13     _dispatchPlatformMessage (dart:ui/hooks.dart:257:31)
+(elided 2 frames from class _AssertionError)
+====================================================================================================
+flutter: [ExcelFileService] pickFile() called. platform=macos 3.5.4 (stable) (Wed Oct 16 16:18:51 2024 +0000) on "macos_arm64"
+flutter: [ExcelFileService] macOS detected, using file_selector.openFile(...)
+flutter: [ExcelFileService] file_selector.openFile returned. selectedPath=null (user cancelled or dialog failed)
+flutter: [ColumnIdentifierService] XML: 第一行没有单元格
+flutter: [ExcelMatchService] 扫描到需要匹配的行: Item=1, Description=Preliminaries, Design and General Items, needsRate=true, needsAmount=true (行号: 7)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=1.1, Description=Safety precautions (行号: 8, Rate=1554, Amount=1554)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=1.2, Description=Insurance (行号: 9, Rate=18391, Amount=18391)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=1.3, Description=Statutory requirements and/or levies (行号: 10, Rate=28621, Amount=28621)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=1.4, Description=Site Supervision including CP(T), CP(NT) and Fire Marshall (行号: 11, Rate=119371, Amount=119371)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=1.5, Description=Transportation (行号: 12, Rate=21057, Amount=21057)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=1.6, Description=Clearing away of rubbish during the progress of the Works & final cleaning (行号: 13, Rate=13986, Amount=13986)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=1.7, Description=Project management and document submissions (行号: 14, Rate=15540, Amount=15540)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=1.8, Description=All statutory permits or licenses, including the Construction Noise Permit (CNP) (行号: 15, Rate=7770, Amount=7770)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=1.9, Description=Measures for P-Licensing System in accordance with Appendix XVII to particular specification (行号: 16, Rate=4662, Amount=4662)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=1.10, Description=Measures for Contractor Fitness for Duty Management in accordance with Appendix XVIII to particular specification (行号: 17, Rate=23013, Amount=23013)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=1.11, Description=Measures for Project Specific Safety Training (PSST) with  Appendix XIX to particular specification (行号: 18, Rate=7770, Amount=7770)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=1.12, Description=Temporary Works and Provisions (行号: 19, Rate=13986, Amount=13986)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=1.13, Description=Coordination with interfacing parties (行号: 20, Rate=41958, Amount=41958)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=1.14, Description=Statutory submission including employment of AP/RSE (行号: 21, Rate=15540, Amount=15540)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=1.15, Description=Provide Technically Competent Persons under Registered Contractor stream (行号: 22, Rate=23310, Amount=23310)
+flutter: [ExcelMatchService] 扫描到需要匹配的行: Item=1.16, Description=Any items which have not been specifically mentioned above but are required by Specification or Drawings. Please insert the details below :, needsRate=true, needsAmount=true (行号: 23)
+flutter: [ExcelMatchService] Item为空，根据上一行推断: 上一行Item=1.16 → 当前行Item=1.17 (行号: 24)
+flutter: [ExcelMatchService] 扫描到需要匹配的行: Item=1.17 (推断自上一行: 1.16), Description=, needsRate=true, needsAmount=false (行号: 24)
+flutter: [ExcelMatchService] 扫描到需要匹配的行: Item=2, Description=Thermal Insulation Replacement for Chilled Water Pipe from PRE to MEF, needsRate=true, needsAmount=true (行号: 25)
+flutter: [ExcelMatchService] 扫描到需要匹配的行: Item=2.1, Description=Dismantle existing thermal insulation of chilled water supply & return pipes as shown in PS and drawing., needsRate=true, needsAmount=true (行号: 26)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=2.1.1, Description= - at Prince Edward Station (PRE) (行号: 27, Rate=17002, Amount=17002)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=2.1.2, Description= - at Mei Foo Station (MEF) (行号: 28, Rate=231728, Amount=231728)
+flutter: [ExcelMatchService] 扫描到需要匹配的行: Item=2.2, Description=Supply and install new thermal insulation complete with cladding, high density insulation with metal cover and necessary accessories for chilled water supply & return pipes including re-condition the chilled water pipes including rust removal and painting as shown in PS and drawing., needsRate=true, needsAmount=true (行号: 29)
+flutter: [ExcelMatchService] 扫描到需要匹配的行: Item=2.2.1, Description= - at PRE, needsRate=true, needsAmount=true (行号: 30)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=2.2.1.1, Description=250mm dia. (行号: 31, Rate=2772, Amount=19404)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=2.2.1.2, Description=200mm dia.  (行号: 32, Rate=2588, Amount=77640)
+flutter: [ExcelMatchService] 扫描到需要匹配的行: Item=2.2.2, Description= - at MEF, needsRate=true, needsAmount=true (行号: 33)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=2.2.2.1, Description=250mm dia. (行号: 34, Rate=2758, Amount=413700)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=2.2.2.2, Description=200mm dia.  (行号: 35, Rate=3420, Amount=348840)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=2.2.2.3, Description=125mm dia. (行号: 36, Rate=2629, Amount=70983)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=2.2.2.4, Description=100mm dia. (行号: 37, Rate=3746, Amount=116126)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=2.2.2.5, Description=65mm dia. (行号: 38, Rate=3168, Amount=167904)
+flutter: [ExcelMatchService] 扫描到需要匹配的行: Item=2.3, Description=Other charges
+flutter: Any items which have not been specifically mentioned above but are required by Particular Specification or Drawings. Please insert the details below :, needsRate=true, needsAmount=true (行号: 39)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=2.3.1, Description=150mm dia.(Ref.C5724/T/PRE/MTR/M09/005) (行号: 40, Rate=3261, Amount=456540)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=3, Description=Site validation and condition survey report (行号: 41, Rate=38850, Amount=38850)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=4, Description=Carry out testing and commissioning. (行号: 42, Rate=7770, Amount=7770)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=5, Description=Provide detailed installation drawings. (行号: 43, Rate=38850, Amount=38850)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=6, Description=Provide the necessary measures e.g. temporary ventilation and/or air conditioning systems complete with all necessary accessories for all affected area during air-conditioning suspension period (行号: 44, Rate=7770, Amount=7770)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=7, Description=Remove and re-instate existing false ceiling, existing security wire meshes, enclosures (including fire rated enclosures), decoration panels, etc. along the proposed services routes for installation of the new services, or modification or removal of existing services (行号: 45, Rate=85470, Amount=85470)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=8, Description=Provide all necessary builder's works associated with ECS works including floor/slab/deck/platform/wall openings, concrete plinth, supports, pipe sleeves with fire
+flutter: resisting sealant & etc. to suit the new equipment and installations (行号: 46, Rate=7770, Amount=7770)
+flutter: [ExcelMatchService] 扫描到需要匹配的行: Item=9, Description=Any items which have not been specifically mentioned above but are required by Particular Specification or Drawings. Please insert the details below :, needsRate=true, needsAmount=true (行号: 47)
+flutter: [ExcelMatchService] Item为空，根据上一行推断: 上一行Item=9 → 当前行Item=9.1 (行号: 48)
+flutter: [ExcelMatchService] 扫描到需要匹配的行: Item=9.1 (推断自上一行: 9), Description=, needsRate=true, needsAmount=true (行号: 48)
+flutter: [ExcelMatchService] Item为空，根据上一行推断: 上一行Item=9 → 当前行Item=9.1 (行号: 49)
+flutter: [ExcelMatchService] 扫描到需要匹配的行: Item=9.1 (推断自上一行: 9), Description=Total Amount carried to the Section 1 in Form of Tender (HK$) : , needsRate=true, needsAmount=false (行号: 49)
+flutter: [ExcelMatchService] Item为空，根据上一行推断: 上一行Item=9 → 当前行Item=9.1 (行号: 50)
+flutter: [ExcelMatchService] 扫描到需要匹配的行: Item=9.1 (推断自上一行: 9), Description=Contact Person :, needsRate=true, needsAmount=true (行号: 50)
+flutter: [ExcelMatchService] Item为空，根据上一行推断: 上一行Item=9 → 当前行Item=9.1 (行号: 51)
+flutter: [ExcelMatchService] 扫描到需要匹配的行: Item=9.1 (推断自上一行: 9), Description=Tel. No. :, needsRate=true, needsAmount=true (行号: 51)
+flutter: [ExcelMatchService] Item为空，根据上一行推断: 上一行Item=9 → 当前行Item=9.1 (行号: 52)
+flutter: [ExcelMatchService] 扫描到需要匹配的行: Item=9.1 (推断自上一行: 9), Description=Fax No. :, needsRate=true, needsAmount=true (行号: 52)
+flutter: [ExcelMatchService] Item为空，根据上一行推断: 上一行Item=9 → 当前行Item=9.1 (行号: 53)
+flutter: [ExcelMatchService] 扫描到需要匹配的行: Item=9.1 (推断自上一行: 9), Description=E-mail Address :, needsRate=true, needsAmount=true (行号: 53)
+flutter: [ExcelMatchService] Item为空，根据上一行推断: 上一行Item=9 → 当前行Item=9.1 (行号: 54)
+flutter: [ExcelMatchService] 扫描到需要匹配的行: Item=9.1 (推断自上一行: 9), Description=Name of Authorized Person :, needsRate=true, needsAmount=true (行号: 54)
+flutter: [ExcelMatchService] Item为空，根据上一行推断: 上一行Item=9 → 当前行Item=9.1 (行号: 55)
+flutter: [ExcelMatchService] 扫描到需要匹配的行: Item=9.1 (推断自上一行: 9), Description=Title :, needsRate=true, needsAmount=true (行号: 55)
+flutter: [ExcelMatchService] Item为空，根据上一行推断: 上一行Item=9 → 当前行Item=9.1 (行号: 56)
+flutter: [ExcelMatchService] 扫描到需要匹配的行: Item=9.1 (推断自上一行: 9), Description=Company Name :, needsRate=true, needsAmount=true (行号: 56)
+flutter: [ExcelMatchService] Item为空，根据上一行推断: 上一行Item=9 → 当前行Item=9.1 (行号: 57)
+flutter: [ExcelMatchService] 扫描到需要匹配的行: Item=9.1 (推断自上一行: 9), Description=Date :, needsRate=true, needsAmount=true (行号: 57)
+flutter: [ExcelMatchService] 跳过备注行: Item=Remark :, Description=(1) Please fill in the highlighted areas.
+flutter: [ExcelMatchService] Item为空，根据上一行推断: 上一行Item=Remark : → 当前行Item=Remark :.1 (行号: 60)
+flutter: [ExcelMatchService] 跳过备注行: Item=Remark :.1, Description=(2) The quantities stated in the BQ above are for reference only. Tenderers should examine the site and all relevant documentation prior to the submission of their tenders
+flutter: [ExcelMatchService] 操作失败: PathAccessException: Cannot open file, path = '/Users/xiaolin/Desktop/草稿/Part IV - Pricing Document - Q25113（ZL) - 副本.xlsx' (OS Error: Operation not permitted, errno = 1)
+flutter: [ExcelMatchService] 堆栈: #0      _checkForErrorResponse (dart:io/common.dart:55:9)
+flutter: #1      _File.open.<anonymous closure> (dart:io/file_impl.dart:381:7)
+flutter: <asynchronous suspension>
+flutter: #2      _File.readAsBytes.<anonymous closure> (dart:io/file_impl.dart:562:24)
+flutter: <asynchronous suspension>
+flutter: #3      ExcelParserService.parseDraftFileWithXml (package:myexcle/services/excel_parser_service.dart:31:19)
+flutter: <asynchronous suspension>
+flutter: #4      ExcelMatchService.matchExcelFiles.<anonymous closure> (package:myexcle/services/excel_match_service.dart:105:21)
+flutter: <asynchronous suspension>
+flutter: #5      ExcelMatchService._safeParse (package:myexcle/services/excel_match_service.dart:352:7)
+flutter: <asynchronous suspension>
+flutter: #6      ExcelMatchService.matchExcelFiles (package:myexcle/services/excel_match_service.dart:104:29)
+flutter: <asynchronous suspension>
+flutter: #7      _ExcelEditorPageState._executeMatch (package:myexcle/ui/excel_editor_page.dart:2030:22)
+flutter: <asynchronous suspension>
+flutter: #8      _ExcelEditorPageState._checkAndAutoMatch (package:myexcle/ui/excel_editor_page.dart:1952:7)
+flutter: <asynchronous suspension>
+flutter: 
+flutter: [ColumnIdentifierService] XML: 第一行没有单元格
+flutter: [ExcelMatchService] 扫描到需要匹配的行: Item=1, Description=Preliminaries, Design and General Items, needsRate=true, needsAmount=true (行号: 7)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=1.1, Description=Safety precautions (行号: 8, Rate=1554, Amount=1554)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=1.2, Description=Insurance (行号: 9, Rate=18391, Amount=18391)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=1.3, Description=Statutory requirements and/or levies (行号: 10, Rate=28621, Amount=28621)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=1.4, Description=Site Supervision including CP(T), CP(NT) and Fire Marshall (行号: 11, Rate=119371, Amount=119371)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=1.5, Description=Transportation (行号: 12, Rate=21057, Amount=21057)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=1.6, Description=Clearing away of rubbish during the progress of the Works & final cleaning (行号: 13, Rate=13986, Amount=13986)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=1.7, Description=Project management and document submissions (行号: 14, Rate=15540, Amount=15540)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=1.8, Description=All statutory permits or licenses, including the Construction Noise Permit (CNP) (行号: 15, Rate=7770, Amount=7770)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=1.9, Description=Measures for P-Licensing System in accordance with Appendix XVII to particular specification (行号: 16, Rate=4662, Amount=4662)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=1.10, Description=Measures for Contractor Fitness for Duty Management in accordance with Appendix XVIII to particular specification (行号: 17, Rate=23013, Amount=23013)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=1.11, Description=Measures for Project Specific Safety Training (PSST) with  Appendix XIX to particular specification (行号: 18, Rate=7770, Amount=7770)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=1.12, Description=Temporary Works and Provisions (行号: 19, Rate=13986, Amount=13986)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=1.13, Description=Coordination with interfacing parties (行号: 20, Rate=41958, Amount=41958)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=1.14, Description=Statutory submission including employment of AP/RSE (行号: 21, Rate=15540, Amount=15540)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=1.15, Description=Provide Technically Competent Persons under Registered Contractor stream (行号: 22, Rate=23310, Amount=23310)
+flutter: [ExcelMatchService] 扫描到需要匹配的行: Item=1.16, Description=Any items which have not been specifically mentioned above but are required by Specification or Drawings. Please insert the details below :, needsRate=true, needsAmount=true (行号: 23)
+flutter: [ExcelMatchService] Item为空，根据上一行推断: 上一行Item=1.16 → 当前行Item=1.17 (行号: 24)
+flutter: [ExcelMatchService] 扫描到需要匹配的行: Item=1.17 (推断自上一行: 1.16), Description=, needsRate=true, needsAmount=false (行号: 24)
+flutter: [ExcelMatchService] 扫描到需要匹配的行: Item=2, Description=Thermal Insulation Replacement for Chilled Water Pipe from PRE to MEF, needsRate=true, needsAmount=true (行号: 25)
+flutter: [ExcelMatchService] 扫描到需要匹配的行: Item=2.1, Description=Dismantle existing thermal insulation of chilled water supply & return pipes as shown in PS and drawing., needsRate=true, needsAmount=true (行号: 26)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=2.1.1, Description= - at Prince Edward Station (PRE) (行号: 27, Rate=17002, Amount=17002)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=2.1.2, Description= - at Mei Foo Station (MEF) (行号: 28, Rate=231728, Amount=231728)
+flutter: [ExcelMatchService] 扫描到需要匹配的行: Item=2.2, Description=Supply and install new thermal insulation complete with cladding, high density insulation with metal cover and necessary accessories for chilled water supply & return pipes including re-condition the chilled water pipes including rust removal and painting as shown in PS and drawing., needsRate=true, needsAmount=true (行号: 29)
+flutter: [ExcelMatchService] 扫描到需要匹配的行: Item=2.2.1, Description= - at PRE, needsRate=true, needsAmount=true (行号: 30)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=2.2.1.1, Description=250mm dia. (行号: 31, Rate=2772, Amount=19404)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=2.2.1.2, Description=200mm dia.  (行号: 32, Rate=2588, Amount=77640)
+flutter: [ExcelMatchService] 扫描到需要匹配的行: Item=2.2.2, Description= - at MEF, needsRate=true, needsAmount=true (行号: 33)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=2.2.2.1, Description=250mm dia. (行号: 34, Rate=2758, Amount=413700)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=2.2.2.2, Description=200mm dia.  (行号: 35, Rate=3420, Amount=348840)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=2.2.2.3, Description=125mm dia. (行号: 36, Rate=2629, Amount=70983)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=2.2.2.4, Description=100mm dia. (行号: 37, Rate=3746, Amount=116126)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=2.2.2.5, Description=65mm dia. (行号: 38, Rate=3168, Amount=167904)
+flutter: [ExcelMatchService] 扫描到需要匹配的行: Item=2.3, Description=Other charges
+flutter: Any items which have not been specifically mentioned above but are required by Particular Specification or Drawings. Please insert the details below :, needsRate=true, needsAmount=true (行号: 39)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=2.3.1, Description=150mm dia.(Ref.C5724/T/PRE/MTR/M09/005) (行号: 40, Rate=3261, Amount=456540)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=3, Description=Site validation and condition survey report (行号: 41, Rate=38850, Amount=38850)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=4, Description=Carry out testing and commissioning. (行号: 42, Rate=7770, Amount=7770)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=5, Description=Provide detailed installation drawings. (行号: 43, Rate=38850, Amount=38850)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=6, Description=Provide the necessary measures e.g. temporary ventilation and/or air conditioning systems complete with all necessary accessories for all affected area during air-conditioning suspension period (行号: 44, Rate=7770, Amount=7770)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=7, Description=Remove and re-instate existing false ceiling, existing security wire meshes, enclosures (including fire rated enclosures), decoration panels, etc. along the proposed services routes for installation of the new services, or modification or removal of existing services (行号: 45, Rate=85470, Amount=85470)
+flutter: [ExcelMatchService] 跳过已填充的行: Item=8, Description=Provide all necessary builder's works associated with ECS works including floor/slab/deck/platform/wall openings, concrete plinth, supports, pipe sleeves with fire
+flutter: resisting sealant & etc. to suit the new equipment and installations (行号: 46, Rate=7770, Amount=7770)
+flutter: [ExcelMatchService] 扫描到需要匹配的行: Item=9, Description=Any items which have not been specifically mentioned above but are required by Particular Specification or Drawings. Please insert the details below :, needsRate=true, needsAmount=true (行号: 47)
+flutter: [ExcelMatchService] Item为空，根据上一行推断: 上一行Item=9 → 当前行Item=9.1 (行号: 48)
+flutter: [ExcelMatchService] 扫描到需要匹配的行: Item=9.1 (推断自上一行: 9), Description=, needsRate=true, needsAmount=true (行号: 48)
+flutter: [ExcelMatchService] Item为空，根据上一行推断: 上一行Item=9 → 当前行Item=9.1 (行号: 49)
+flutter: [ExcelMatchService] 扫描到需要匹配的行: Item=9.1 (推断自上一行: 9), Description=Total Amount carried to the Section 1 in Form of Tender (HK$) : , needsRate=true, needsAmount=false (行号: 49)
+flutter: [ExcelMatchService] Item为空，根据上一行推断: 上一行Item=9 → 当前行Item=9.1 (行号: 50)
+flutter: [ExcelMatchService] 扫描到需要匹配的行: Item=9.1 (推断自上一行: 9), Description=Contact Person :, needsRate=true, needsAmount=true (行号: 50)
+flutter: [ExcelMatchService] Item为空，根据上一行推断: 上一行Item=9 → 当前行Item=9.1 (行号: 51)
+flutter: [ExcelMatchService] 扫描到需要匹配的行: Item=9.1 (推断自上一行: 9), Description=Tel. No. :, needsRate=true, needsAmount=true (行号: 51)
+flutter: [ExcelMatchService] Item为空，根据上一行推断: 上一行Item=9 → 当前行Item=9.1 (行号: 52)
+flutter: [ExcelMatchService] 扫描到需要匹配的行: Item=9.1 (推断自上一行: 9), Description=Fax No. :, needsRate=true, needsAmount=true (行号: 52)
+flutter: [ExcelMatchService] Item为空，根据上一行推断: 上一行Item=9 → 当前行Item=9.1 (行号: 53)
+flutter: [ExcelMatchService] 扫描到需要匹配的行: Item=9.1 (推断自上一行: 9), Description=E-mail Address :, needsRate=true, needsAmount=true (行号: 53)
+flutter: [ExcelMatchService] Item为空，根据上一行推断: 上一行Item=9 → 当前行Item=9.1 (行号: 54)
+flutter: [ExcelMatchService] 扫描到需要匹配的行: Item=9.1 (推断自上一行: 9), Description=Name of Authorized Person :, needsRate=true, needsAmount=true (行号: 54)
+flutter: [ExcelMatchService] Item为空，根据上一行推断: 上一行Item=9 → 当前行Item=9.1 (行号: 55)
+flutter: [ExcelMatchService] 扫描到需要匹配的行: Item=9.1 (推断自上一行: 9), Description=Title :, needsRate=true, needsAmount=true (行号: 55)
+flutter: [ExcelMatchService] Item为空，根据上一行推断: 上一行Item=9 → 当前行Item=9.1 (行号: 56)
+flutter: [ExcelMatchService] 扫描到需要匹配的行: Item=9.1 (推断自上一行: 9), Description=Company Name :, needsRate=true, needsAmount=true (行号: 56)
+flutter: [ExcelMatchService] Item为空，根据上一行推断: 上一行Item=9 → 当前行Item=9.1 (行号: 57)
+flutter: [ExcelMatchService] 扫描到需要匹配的行: Item=9.1 (推断自上一行: 9), Description=Date :, needsRate=true, needsAmount=true (行号: 57)
+flutter: [ExcelMatchService] 跳过备注行: Item=Remark :, Description=(1) Please fill in the highlighted areas.
+flutter: [ExcelMatchService] Item为空，根据上一行推断: 上一行Item=Remark : → 当前行Item=Remark :.1 (行号: 60)
+flutter: [ExcelMatchService] 跳过备注行: Item=Remark :.1, Description=(2) The quantities stated in the BQ above are for reference only. Tenderers should examine the site and all relevant documentation prior to the submission of their tenders
+flutter: [ExcelMatchService] 操作失败: PathAccessException: Cannot open file, path = '/Users/xiaolin/Desktop/草稿/Part IV - Pricing Document - Q25113（ZL) - 副本.xlsx' (OS Error: Operation not permitted, errno = 1)
+flutter: [ExcelMatchService] 堆栈: #0      _checkForErrorResponse (dart:io/common.dart:55:9)
+flutter: #1      _File.open.<anonymous closure> (dart:io/file_impl.dart:381:7)
+flutter: <asynchronous suspension>
+flutter: #2      _File.readAsBytes.<anonymous closure> (dart:io/file_impl.dart:562:24)
+flutter: <asynchronous suspension>
+flutter: #3      ExcelParserService.parseDraftFileWithXml (package:myexcle/services/excel_parser_service.dart:31:19)
+flutter: <asynchronous suspension>
+flutter: #4      ExcelMatchService.matchExcelFiles.<anonymous closure> (package:myexcle/services/excel_match_service.dart:105:21)
+flutter: <asynchronous suspension>
+flutter: #5      ExcelMatchService._safeParse (package:myexcle/services/excel_match_service.dart:352:7)
+flutter: <asynchronous suspension>
+flutter: #6      ExcelMatchService.matchExcelFiles (package:myexcle/services/excel_match_service.dart:104:29)
+flutter: <asynchronous suspension>
+flutter: #7      _ExcelEditorPageState._executeMatch (package:myexcle/ui/excel_editor_page.dart:2030:22)
+flutter: <asynchronous suspension>
+flutter: #8      _ExcelEditorPageState._checkAndAutoMatch (package:myexcle/ui/excel_editor_page.dart:1952:7)
+flutter: <asynchronous suspension>
+flutter: 
+
+======== Exception caught by services library ======================================================
+The following assertion was thrown during a platform message callback:
+A KeyDownEvent is dispatched, but the state shows that the physical key is already pressed. If this occurs in real application, please report this bug to Flutter. If this occurs in unit tests, please ensure that simulated events follow Flutter's event model as documented in `HardwareKeyboard`. This was the event: KeyDownEvent#24832(physicalKey: PhysicalKeyboardKey#f2ed2(usbHidUsage: "0x000700e3", debugName: "Meta Left"), logicalKey: LogicalKeyboardKey#e3a44(keyId: "0x200000106", keyLabel: "Meta Left", debugName: "Meta Left"), character: null, timeStamp: 2:40:25.241045)
+'package:flutter/src/services/hardware_keyboard.dart':
+Failed assertion: line 509 pos 16: '!_pressedKeys.containsKey(event.physicalKey)'
+
+
+Either the assertion indicates an error in the framework itself, or we should provide substantially more information in this error message to help you determine and fix the underlying cause.
+In either case, please report this assertion by filing a bug on GitHub:
+  https://github.com/flutter/flutter/issues/new?template=2_bug.yml
+
+When the exception was thrown, this was the stack: 
+#2      HardwareKeyboard._assertEventIsRegular.<anonymous closure> (package:flutter/src/services/hardware_keyboard.dart:509:16)
+#3      HardwareKeyboard._assertEventIsRegular (package:flutter/src/services/hardware_keyboard.dart:524:6)
+#4      HardwareKeyboard.handleKeyEvent (package:flutter/src/services/hardware_keyboard.dart:646:5)
+#5      KeyEventManager.handleRawKeyMessage (package:flutter/src/services/hardware_keyboard.dart:1167:37)
+#6      BasicMessageChannel.setMessageHandler.<anonymous closure> (package:flutter/src/services/platform_channel.dart:235:49)
+#7      _DefaultBinaryMessenger.setMessageHandler.<anonymous closure> (package:flutter/src/services/binding.dart:618:35)
+#8      _invoke2 (dart:ui/hooks.dart:344:13)
+#9      _ChannelCallbackRecord.invoke (dart:ui/channel_buffers.dart:45:5)
+#10     _Channel.push (dart:ui/channel_buffers.dart:135:31)
+#11     ChannelBuffers.push (dart:ui/channel_buffers.dart:343:17)
+#12     PlatformDispatcher._dispatchPlatformMessage (dart:ui/platform_dispatcher.dart:750:22)
+#13     _dispatchPlatformMessage (dart:ui/hooks.dart:257:31)
+(elided 2 frames from class _AssertionError)
+====================================================================================================
+
+======== Exception caught by services library ======================================================
+The following assertion was thrown during a platform message callback:
+A KeyDownEvent is dispatched, but the state shows that the physical key is already pressed. If this occurs in real application, please report this bug to Flutter. If this occurs in unit tests, please ensure that simulated events follow Flutter's event model as documented in `HardwareKeyboard`. This was the event: KeyDownEvent#24832(physicalKey: PhysicalKeyboardKey#f2ed2(usbHidUsage: "0x000700e3", debugName: "Meta Left"), logicalKey: LogicalKeyboardKey#e3a44(keyId: "0x200000106", keyLabel: "Meta Left", debugName: "Meta Left"), character: null, timeStamp: 2:40:25.241045)
+'package:flutter/src/services/hardware_keyboard.dart':
+Failed assertion: line 509 pos 16: '!_pressedKeys.containsKey(event.physicalKey)'
+
+
+Either the assertion indicates an error in the framework itself, or we should provide substantially more information in this error message to help you determine and fix the underlying cause.
+In either case, please report this assertion by filing a bug on GitHub:
+  https://github.com/flutter/flutter/issues/new?template=2_bug.yml
+
+When the exception was thrown, this was the stack: 
+#2      HardwareKeyboard._assertEventIsRegular.<anonymous closure> (package:flutter/src/services/hardware_keyboard.dart:509:16)
+#3      HardwareKeyboard._assertEventIsRegular (package:flutter/src/services/hardware_keyboard.dart:524:6)
+#4      HardwareKeyboard.handleKeyEvent (package:flutter/src/services/hardware_keyboard.dart:646:5)
+#5      KeyEventManager.handleRawKeyMessage (package:flutter/src/services/hardware_keyboard.dart:1167:37)
+#6      BasicMessageChannel.setMessageHandler.<anonymous closure> (package:flutter/src/services/platform_channel.dart:235:49)
+#7      _DefaultBinaryMessenger.setMessageHandler.<anonymous closure> (package:flutter/src/services/binding.dart:618:35)
+#8      _invoke2 (dart:ui/hooks.dart:344:13)
+#9      _ChannelCallbackRecord.invoke (dart:ui/channel_buffers.dart:45:5)
+#10     _Channel.push (dart:ui/channel_buffers.dart:135:31)
+#11     ChannelBuffers.push (dart:ui/channel_buffers.dart:343:17)
+#12     PlatformDispatcher._dispatchPlatformMessage (dart:ui/platform_dispatcher.dart:750:22)
+#13     _dispatchPlatformMessage (dart:ui/hooks.dart:257:31)
+(elided 2 frames from class _AssertionError)
+====================================================================================================
+
+======== Exception caught by services library ======================================================
+The following assertion was thrown during a platform message callback:
+A KeyDownEvent is dispatched, but the state shows that the physical key is already pressed. If this occurs in real application, please report this bug to Flutter. If this occurs in unit tests, please ensure that simulated events follow Flutter's event model as documented in `HardwareKeyboard`. This was the event: KeyDownEvent#24832(physicalKey: PhysicalKeyboardKey#f2ed2(usbHidUsage: "0x000700e3", debugName: "Meta Left"), logicalKey: LogicalKeyboardKey#e3a44(keyId: "0x200000106", keyLabel: "Meta Left", debugName: "Meta Left"), character: null, timeStamp: 2:40:25.241045)
+'package:flutter/src/services/hardware_keyboard.dart':
+Failed assertion: line 509 pos 16: '!_pressedKeys.containsKey(event.physicalKey)'
+
+
+Either the assertion indicates an error in the framework itself, or we should provide substantially more information in this error message to help you determine and fix the underlying cause.
+In either case, please report this assertion by filing a bug on GitHub:
+  https://github.com/flutter/flutter/issues/new?template=2_bug.yml
+
+When the exception was thrown, this was the stack: 
+#2      HardwareKeyboard._assertEventIsRegular.<anonymous closure> (package:flutter/src/services/hardware_keyboard.dart:509:16)
+#3      HardwareKeyboard._assertEventIsRegular (package:flutter/src/services/hardware_keyboard.dart:524:6)
+#4      HardwareKeyboard.handleKeyEvent (package:flutter/src/services/hardware_keyboard.dart:646:5)
+#5      KeyEventManager.handleRawKeyMessage (package:flutter/src/services/hardware_keyboard.dart:1167:37)
+#6      BasicMessageChannel.setMessageHandler.<anonymous closure> (package:flutter/src/services/platform_channel.dart:235:49)
+#7      _DefaultBinaryMessenger.setMessageHandler.<anonymous closure> (package:flutter/src/services/binding.dart:618:35)
+#8      _invoke2 (dart:ui/hooks.dart:344:13)
+#9      _ChannelCallbackRecord.invoke (dart:ui/channel_buffers.dart:45:5)
+#10     _Channel.push (dart:ui/channel_buffers.dart:135:31)
+#11     ChannelBuffers.push (dart:ui/channel_buffers.dart:343:17)
+#12     PlatformDispatcher._dispatchPlatformMessage (dart:ui/platform_dispatcher.dart:750:22)
+#13     _dispatchPlatformMessage (dart:ui/hooks.dart:257:31)
+(elided 2 frames from class _AssertionError)
+====================================================================================================
+
+======== Exception caught by services library ======================================================
+The following assertion was thrown during a platform message callback:
+A KeyDownEvent is dispatched, but the state shows that the physical key is already pressed. If this occurs in real application, please report this bug to Flutter. If this occurs in unit tests, please ensure that simulated events follow Flutter's event model as documented in `HardwareKeyboard`. This was the event: KeyDownEvent#24832(physicalKey: PhysicalKeyboardKey#f2ed2(usbHidUsage: "0x000700e3", debugName: "Meta Left"), logicalKey: LogicalKeyboardKey#e3a44(keyId: "0x200000106", keyLabel: "Meta Left", debugName: "Meta Left"), character: null, timeStamp: 2:40:25.241045)
+'package:flutter/src/services/hardware_keyboard.dart':
+Failed assertion: line 509 pos 16: '!_pressedKeys.containsKey(event.physicalKey)'
+
+
+Either the assertion indicates an error in the framework itself, or we should provide substantially more information in this error message to help you determine and fix the underlying cause.
+In either case, please report this assertion by filing a bug on GitHub:
+  https://github.com/flutter/flutter/issues/new?template=2_bug.yml
+
+When the exception was thrown, this was the stack: 
+#2      HardwareKeyboard._assertEventIsRegular.<anonymous closure> (package:flutter/src/services/hardware_keyboard.dart:509:16)
+#3      HardwareKeyboard._assertEventIsRegular (package:flutter/src/services/hardware_keyboard.dart:524:6)
+#4      HardwareKeyboard.handleKeyEvent (package:flutter/src/services/hardware_keyboard.dart:646:5)
+#5      KeyEventManager.handleRawKeyMessage (package:flutter/src/services/hardware_keyboard.dart:1167:37)
+#6      BasicMessageChannel.setMessageHandler.<anonymous closure> (package:flutter/src/services/platform_channel.dart:235:49)
+#7      _DefaultBinaryMessenger.setMessageHandler.<anonymous closure> (package:flutter/src/services/binding.dart:618:35)
+#8      _invoke2 (dart:ui/hooks.dart:344:13)
+#9      _ChannelCallbackRecord.invoke (dart:ui/channel_buffers.dart:45:5)
+#10     _Channel.push (dart:ui/channel_buffers.dart:135:31)
+#11     ChannelBuffers.push (dart:ui/channel_buffers.dart:343:17)
+#12     PlatformDispatcher._dispatchPlatformMessage (dart:ui/platform_dispatcher.dart:750:22)
+#13     _dispatchPlatformMessage (dart:ui/hooks.dart:257:31)
+(elided 2 frames from class _AssertionError)
+====================================================================================================

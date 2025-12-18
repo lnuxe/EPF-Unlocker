@@ -6,6 +6,7 @@ import 'ui/excel_editor_page.dart';
 void main() {
   // 确保桌面端插件（包括 file_selector）在运行前完成注册
   WidgetsFlutterBinding.ensureInitialized();
+
   runApp(const MyApp());
 }
 

@@ -61,6 +61,7 @@ class _ExcelEditorPageState extends State<ExcelEditorPage> {
   static const _prefsKeyOutputDirExcel = 'output_dir_excel'; // Excel 文件保存目录
   static const _prefsKeyOutputDirPdf = 'output_dir_pdf'; // PDF 文件保存目录
   static const _prefsKeyHasSetOutputDir = 'has_set_output_dir'; // 是否已设置过保存目录
+  static const _prefsKeyDraftFile = 'draft_file_path'; // 草稿文件路径缓存
 
   @override
   void initState() {
@@ -97,6 +98,21 @@ class _ExcelEditorPageState extends State<ExcelEditorPage> {
 
     final excelDir = prefs.getString(_prefsKeyOutputDirExcel);
     final pdfDir = prefs.getString(_prefsKeyOutputDirPdf);
+    final draftFilePath = prefs.getString(_prefsKeyDraftFile);
+
+    // 加载草稿文件缓存（如果文件存在）
+    File? cachedDraftFile;
+    if (draftFilePath != null && draftFilePath.isNotEmpty) {
+      final file = File(draftFilePath);
+      if (await file.exists()) {
+        cachedDraftFile = file;
+        debugPrint('[ExcelEditorPage] 已加载缓存的草稿文件: $draftFilePath');
+      } else {
+        // 文件不存在，清除缓存
+        await prefs.remove(_prefsKeyDraftFile);
+        debugPrint('[ExcelEditorPage] 缓存的草稿文件不存在，已清除缓存: $draftFilePath');
+      }
+    }
 
     setState(() {
       _scheduledInputDirPath = (input == null || input.isEmpty) ? null : input;
@@ -106,6 +122,7 @@ class _ExcelEditorPageState extends State<ExcelEditorPage> {
           (excelDir == null || excelDir.isEmpty) ? null : excelDir;
       _outputDirPdf = (pdfDir == null || pdfDir.isEmpty) ? null : pdfDir;
       _scheduledDateTime = scheduledDateTime;
+      _draftFile = cachedDraftFile;
     });
 
     // 如果定时任务已启用且有有效时间，重新启动定时任务
@@ -132,6 +149,18 @@ class _ExcelEditorPageState extends State<ExcelEditorPage> {
           _prefsKeyScheduledDate, _scheduledDateTime!.toIso8601String());
     } else {
       await prefs.remove(_prefsKeyScheduledDate);
+    }
+  }
+
+  /// 保存草稿文件路径到缓存
+  Future<void> _saveDraftFileCache(File? file) async {
+    final prefs = _prefs ?? await SharedPreferences.getInstance();
+    if (file != null) {
+      await prefs.setString(_prefsKeyDraftFile, file.path);
+      debugPrint('[ExcelEditorPage] 已保存草稿文件到缓存: ${file.path}');
+    } else {
+      await prefs.remove(_prefsKeyDraftFile);
+      debugPrint('[ExcelEditorPage] 已清除草稿文件缓存');
     }
   }
 
@@ -1137,10 +1166,10 @@ class _ExcelEditorPageState extends State<ExcelEditorPage> {
                   onPressed: () {
                     setState(() {
                       _isMatchMode = !_isMatchMode;
-                      // 切换模式时清空匹配模式的文件
+                      // 切换模式时只清空目标文件，保留草稿文件缓存
                       if (_isMatchMode) {
-                        _draftFile = null;
                         _targetFile = null;
+                        // 草稿文件保留，因为已经缓存了
                       }
                     });
                   },
@@ -1726,6 +1755,8 @@ class _ExcelEditorPageState extends State<ExcelEditorPage> {
               _draftFile = file;
               _statusMessage = '已选择草稿文件：${file.uri.pathSegments.last}';
             });
+            // 保存草稿文件路径到缓存
+            await _saveDraftFileCache(file);
             // 检查输出目录，如果未设置则提示
             if (_outputDirExcel == null || _outputDirExcel!.isEmpty) {
               setState(() {
@@ -1938,9 +1969,16 @@ class _ExcelEditorPageState extends State<ExcelEditorPage> {
   }
 
   /// 清理匹配状态（清空文件、重置加载状态）
-  void _clearMatchState({String? keepStatusMessage}) {
+  Future<void> _clearMatchState(
+      {String? keepStatusMessage, bool clearDraftCache = false}) async {
+    // 只有在明确要求清除缓存时才清空草稿文件
+    if (clearDraftCache) {
+      await _saveDraftFileCache(null);
+    }
     setState(() {
-      _draftFile = null;
+      if (clearDraftCache) {
+        _draftFile = null;
+      }
       _targetFile = null;
       _isLoading = false;
       _isAutoMatching = false;
@@ -1999,12 +2037,30 @@ class _ExcelEditorPageState extends State<ExcelEditorPage> {
         finalStatusMessage =
             '${result.message}\n输出文件：${outputPath.split('/').last}';
       } else {
+        // 匹配失败时显示错误弹窗，不执行匹配
         finalStatusMessage = result.message;
+        await _showInfoDialog(
+          '匹配失败',
+          '${result.message}\n\n'
+              '提示：\n'
+              '• 系统只执行 100% 精确匹配（Item 和 Description 必须完全一致）\n'
+              '• 如果匹配失败，请检查草稿文件和目标文件中的 Item 和 Description 是否完全一致\n'
+              '• 匹配失败的行不会写入到输出文件中',
+        );
       }
     } catch (e, st) {
       debugPrint('[ExcelEditorPage] 匹配失败: $e');
       debugPrint('[ExcelEditorPage] 堆栈: $st');
       finalStatusMessage = '匹配失败：$e';
+      // 异常时显示错误弹窗，不执行匹配
+      await _showInfoDialog(
+        '匹配异常',
+        '匹配过程中发生错误：\n\n$e\n\n'
+            '提示：\n'
+            '• 请检查文件格式是否正确\n'
+            '• 请确保文件未被其他程序占用\n'
+            '• 如果问题持续，请查看日志获取详细信息',
+      );
     } finally {
       // 无论成功还是失败，都清理匹配状态
       _clearMatchState(keepStatusMessage: finalStatusMessage);

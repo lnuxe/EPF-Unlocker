@@ -199,21 +199,93 @@ class MatchResult extends Equatable {
   final TargetRow target;
   final DraftRow? draft;
   final bool matched;
-  final double? rate; // Unit Rate 值
-  final double? amount; // Amount 值
+  final double? qty; // Qty 值（如果草稿文件有值且目标文件为空，则匹配）
+  final double? rate; // Unit Rate 值（匹配到的值）
+  final double? amount; // Amount 值（匹配到的值）
   final String? matchType; // 'strong', 'medium', 'weak', or null
+  // 实际写入的值（可能与匹配值不同，如使用公式）
+  final double? writtenQty; // 实际写入的 Qty 值
+  final double? writtenRate; // 实际写入的 Rate 值
+  final double? writtenAmount; // 实际写入的 Amount 值
+  final String? amountFormula; // Amount 列的公式（如果有）
+  // Total行相关字段
+  final bool isTotalRow; // 标识是否为Total行
+  final double? draftTotalAmount; // 草稿文件中的Total值（用于对比）
+  final String? totalFormula; // Total行的SUM公式
+  final double? calculatedTotal; // 通过公式计算的总值（用于对比）
 
   const MatchResult({
     required this.target,
     this.draft,
     required this.matched,
+    this.qty,
     this.rate,
     this.amount,
     this.matchType,
+    this.writtenQty,
+    this.writtenRate,
+    this.writtenAmount,
+    this.amountFormula,
+    this.isTotalRow = false,
+    this.draftTotalAmount,
+    this.totalFormula,
+    this.calculatedTotal,
   });
 
+  MatchResult copyWith({
+    TargetRow? target,
+    DraftRow? draft,
+    bool? matched,
+    double? qty,
+    double? rate,
+    double? amount,
+    String? matchType,
+    double? writtenQty,
+    double? writtenRate,
+    double? writtenAmount,
+    String? amountFormula,
+    bool? isTotalRow,
+    double? draftTotalAmount,
+    String? totalFormula,
+    double? calculatedTotal,
+  }) {
+    return MatchResult(
+      target: target ?? this.target,
+      draft: draft ?? this.draft,
+      matched: matched ?? this.matched,
+      qty: qty ?? this.qty,
+      rate: rate ?? this.rate,
+      amount: amount ?? this.amount,
+      matchType: matchType ?? this.matchType,
+      writtenQty: writtenQty ?? this.writtenQty,
+      writtenRate: writtenRate ?? this.writtenRate,
+      writtenAmount: writtenAmount ?? this.writtenAmount,
+      amountFormula: amountFormula ?? this.amountFormula,
+      isTotalRow: isTotalRow ?? this.isTotalRow,
+      draftTotalAmount: draftTotalAmount ?? this.draftTotalAmount,
+      totalFormula: totalFormula ?? this.totalFormula,
+      calculatedTotal: calculatedTotal ?? this.calculatedTotal,
+    );
+  }
+
   @override
-  List<Object?> get props => [target, draft, matched, rate, amount, matchType];
+  List<Object?> get props => [
+        target,
+        draft,
+        matched,
+        qty,
+        rate,
+        amount,
+        matchType,
+        writtenQty,
+        writtenRate,
+        writtenAmount,
+        amountFormula,
+        isTotalRow,
+        draftTotalAmount,
+        totalFormula,
+        calculatedTotal,
+      ];
 }
 
 /// 目标文件列结构（自动识别）

@@ -49,4 +49,32 @@
       </requestedPrivileges>
     </security>
   </trustInfo>
+  
+  <!-- Visual C++ 运行时库依赖声明（修复并行配置错误） -->
+  <dependency>
+    <dependentAssembly>
+      <assemblyIdentity
+        type="win32"
+        name="Microsoft.Windows.Common-Controls"
+        version="6.0.0.0"
+        processorArchitecture="*"
+        publicKeyToken="6595b64144ccf1df"
+        language="*"
+      />
+    </dependentAssembly>
+  </dependency>
+  
+  <!-- Visual C++ 2015-2022 运行时库 -->
+  <dependency>
+    <dependentAssembly>
+      <assemblyIdentity
+        type="win32"
+        name="Microsoft.VC142.CRT"
+        version="14.0.0.0"
+        processorArchitecture="*"
+        publicKeyToken="1fc8b3b9a1e18e3b"
+        language="*"
+      />
+    </dependentAssembly>
+  </dependency>
 </assembly>
